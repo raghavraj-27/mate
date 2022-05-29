@@ -19,7 +19,7 @@ const bot = new TelegramBot(TOKEN, options);
 
 mongoose.connect(DB)
 .then(() => {
-    if(process.env.NOVE_ENV === "production") {
+    if(process.env.NODE_ENV === "production") {
         bot.deleteWebHook()
         .then(() => {
             bot.setWebHook(`${URL}/bot${TOKEN}`);
