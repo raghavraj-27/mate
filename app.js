@@ -2,9 +2,12 @@ require('dotenv').config()
 const TelegramBot = require('node-telegram-bot-api')
 const request = require('request')
 const mongoose = require('mongoose');
+// const express = require("express");
 
-const bot = new TelegramBot(process.env.TOKEN, { polling: true });
 
+// const bot = new TelegramBot(process.env.TOKEN, { polling: true });
+// console.log(process.env.NODE_ENV);
+// const app = express();
 mongoose.connect(process.env.MONGO_URL);
 
 const userSchema = new mongoose.Schema({
@@ -16,7 +19,11 @@ const userSchema = new mongoose.Schema({
 
 const User = mongoose.model("User", userSchema);
 
-bot.on("polling_error", (err) => console.log(err));
+// bot.on("polling_error", (err) => console.log(err));
+const webHook = { webHook: {port: process.env.PORT, autoOpen: false}};
+const pooling = {pooling: {autoStart: false }};
+const options = process.env.NODE_ENV === "production" ? webHook : pooling;
+const bot = new TelegramBot(process.env.TOKEN, options);
 
 const markdownEnable = {parse_mode: "Markdown"};
 
@@ -531,9 +538,9 @@ bot.onText(/^[^/]/, function(msg, match) {
     bot.sendMessage(msg.chat.id, 'I didn\'t get it! 😵‍💫\nSee /help 🙄	');
 })
 
-let port = process.env.PORT;
-if (port == null || port == "") {
-  port = 3000;
-}
+// let port = process.env.PORT;
+// if (port == null || port == "") {
+//   port = 3000;
+// }
 
-app.listen(port);
+// app.listen(port);
