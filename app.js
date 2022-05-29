@@ -5,7 +5,7 @@ const mongoose = require('mongoose');
 
 const bot = new TelegramBot(process.env.TOKEN, { polling: true });
 
-mongoose.connect("mongodb+srv://raghavraj_27:RaghavRaj%402002@cluster0.ahmho.mongodb.net/botDB");
+mongoose.connect(process.env.MONGO_URL);
 
 const userSchema = new mongoose.Schema({
     username: String,
