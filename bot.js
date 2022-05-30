@@ -9,7 +9,6 @@ const mongoose = require('mongoose');
 // console.log(process.env.NODE_ENV);
 // const app = express();
 
-const URL = process.env.APP_URL;
 const TOKEN = process.env.BOT_TOKEN;
 const DB = process.env.DATABASE;
 // const webHook = { webHook: {port: process.env.PORT, autoOpen: false}};
@@ -18,12 +17,12 @@ const DB = process.env.DATABASE;
 var bot;
 
 if(process.env.NODE_ENV === 'production') {
-    bot = new TelegramBot(token);
+    bot = new TelegramBot(TOKEN);
     bot.setWebHook(process.env.HEROKU_URL + TOKEN);
-  }
-  else {
+}
+else {
     bot = new TelegramBot(TOKEN, { polling: true });
-  }
+}
 
 mongoose.connect(DB);
 
@@ -564,3 +563,4 @@ bot.onText(/^[^/]/, function(msg, match) {
 // }
 
 // app.listen(port);
+module.exports = bot;
