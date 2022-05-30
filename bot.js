@@ -25,20 +25,7 @@ if(process.env.NODE_ENV === 'production') {
     bot = new TelegramBot(TOKEN, { polling: true });
   }
 
-mongoose.connect(DB)
-.then(() => {
-    if(process.env.NODE_ENV === "production") {
-        bot.deleteWebHook()
-        .then(() => {
-            bot.setWebHook(`${URL}/bot${TOKEN}`);
-        })
-        .then(() => {
-            bot.openWebHook();
-        });
-    } else {
-        bot.startPolling();
-    }
-});
+mongoose.connect(DB);
 
 const userSchema = new mongoose.Schema({
     username: String,
