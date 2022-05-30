@@ -47,3 +47,6 @@
 --- 
 
 <h3>Find the bot <a href="http://t.me/iAmAlbusYourMate_bot">here</a>, or search on Telegram with name, iAmAlbusYourMate_bot</h3>
+
+<!-- <a href="https://soshace.com/building-a-telegram-bot-with-node-js/">Resource to study for it</a>
+<a href="https://stackoverflow.com/questions/18552846/no-web-processes-running-django-in-heroku">Resource to study for it</a> -->
