@@ -2,6 +2,9 @@ require('dotenv').config()
 const TelegramBot = require('node-telegram-bot-api')
 const request = require('request')
 const mongoose = require('mongoose');
+const express = require('express')
+const bodyParser = require('body-parser');
+ 
 // const express = require("express");
 
 
@@ -12,26 +15,35 @@ const mongoose = require('mongoose');
 const TOKEN = process.env.BOT_TOKEN;
 const APP_URL = process.env.HEROKU_URL;
 const DB = process.env.DATABASE;
-const webHook = { webHook: {port: process.env.PORT, autoOpen: false}};
-const pooling = {pooling: {autoStart: false }};
-const options = process.env.NODE_ENV === "production" ? webHook : pooling;
-const bot = new TelegramBot(TOKEN, options);
+// const webHook = { webHook: {port: process.env.PORT, autoOpen: false}};
+// const pooling = {pooling: {autoStart: false }};
+// const options = process.env.NODE_ENV === "production" ? webHook : pooling;
+// const bot = new TelegramBot(TOKEN, options);
+let bot;
+if (process.env.NODE_ENV === 'production') {
+    bot = new TelegramBot(TOKEN);
+    bot.setWebHook(process.env.HEROKU_URL + TOKEN);
+ } else {
+    bot = new TelegramBot(token, { polling: true });
+ }
+mongoose.connect(DB);
+// .then(() => {
+//     if(process.env.NODE_ENV === 'production') {
+//         bot.deleteWebHook()
+//         .then(() => {
 
-mongoose.connect(DB)
-.then(() => {
-    if(process.env.NODE_ENV === 'production') {
-        bot.deleteWebHook()
-        .then(() => {
-            bot.setWebHook(`${APP_URL}/bot${TOKEN}`);
-        })
-        .then(() => {
-            bot.openWebHook();
-        });
-    } else {
-        console.log("here");
-        bot.startPolling();
-    }
-});
+//             // bot.setWebHook(`${APP_URL}/bot${TOKEN}`);
+//             bot.setWebHook(APP_URL + TOK);
+//         })
+//         .then(() => {
+//             bot.openWebHook();
+//         });
+//     } else {
+//         console.log("here");
+//         bot.startPolling();
+//     }
+// });
+
 
 const userSchema = new mongoose.Schema({
     username: String,
@@ -570,3 +582,15 @@ bot.onText(/^[^/]/, function(msg, match) {
 // }
 
 // app.listen(port);
+
+
+const app = express();
+ 
+app.use(bodyParser.json());
+ 
+app.listen(process.env.PORT);
+ 
+app.post('/' + TOKEN, (req, res) => {
+  bot.processUpdate(req.body);
+  res.sendStatus(200);
+});
