@@ -1,58 +1,49 @@
 
 <p align="center">
- <img src="/botpic.jpg" alt="drawing" height="200" width="200"> 
+ <img src="images/botpic.jpg" alt="drawing" height="200" width="200"> 
 </p>
 
 <a href="http://t.me/iAmAlbusYourMate_bot"><h1 align="center">mate</h1></a>
 
 
-<p align="center"> A friendly bot which can bring news, weather for you and save your daily tasks </p>
+<h2 align="center"> A friendly bot which can bring news, weather for you and save your daily tasks </h2>
 
-<p align="center">
-<!-- <a href="https://github.com/raghavraj-27/doc-platform/stargazers"><img src="https://img.shields.io/github/stars/raghavraj-27/doc-platform" alt="Stars Badge"/></a> -->
-<!-- <a href="https://github.com/raghavraj-27/doc-platform/network/members"><img src="https://img.shields.io/github/forks/raghavraj-27/doc-platform" alt="Forks Badge"/></a> -->
-<!-- <a href="https://github.com/raghavraj-27/doc-platform/pulls"><img src="https://img.shields.io/github/issues-pr/raghavraj-27/doc-platform" alt="Pull Requests Badge"/></a> -->
-<!-- <a href="https://github.com/raghavraj-27/doc-platform/issues"><img src="https://img.shields.io/github/issues/raghavraj-27/doc-platform" alt="Issues Badge"/></a> -->
-<!-- <a href="https://github.com/raghavraj-27/doc-platform/graphs/contributors"><img alt="GitHub contributors" src="https://img.shields.io/github/contributors/raghavraj-27/doc-platform"></a> -->
-</p>
- 
-<!-- ## Table of Contents
+<h3>Some of the commands with examples</h3>
 
-- [Features](#features)
-- [Usage](#Usage)
-- [Tech Stack](#tech-stack)
+- /start : Bot will introduce itself
+
+<br>
+<img src="images/botStartCommand.jpeg" alt="drawing" height="400" width="200"> 
+
+--- 
+
+- /help : Bot will tell you, how you can use it
+
+<br>
+<img src="images/botHelpCommand.jpeg" alt="drawing" height="400" width="200">
 
 ---
-## Features
 
-- Mate can show you news of whatever you want
+- /news [football] : This command will give top 10 news of "football"
 
-- Mate can show you weather report of where ever you want
+<br>
+<img src="images/botNewsCommand.jpeg" alt="drawing" height="400" width="200">
 
-- Mate can save your daily tasks and your favourite events/dates 
+---
 
-- Mate can also give you details of any movie
+- /weather [city] : This command will weather report of given city"
 
+<br>
+<img src="images/botNewsCommand.jpeg" alt="drawing" height="400" width="200">
 
-## Usage
+---
 
-1. Go to you telegram and search, iAmAlbusYourMate_bot
-2. Open the bot
-3. Bot will itself tell you how to use
+<h3>Tech Stacks</h3>
 
-## Tech Stack
+- NodeJS for server/backend
+- MongoDB, Mongoose for database
+- Heroku for deployment
 
-- NodeJS
-- MongoDB,Mongoose -->
+--- 
 
-<!-- ## Contributors:
-
-<table>
-	<tr>
-		<td>
-<a href="https://github.com/raghavraj-27/doc-platform/graphs/contributors">
-  <img src="https://contrib.rocks/image?repo=raghavraj-27/doc-platform" />
-</a>
-		</td>
-	</tr>
-</table> -->
+<h3>Find the bot <a href="http://t.me/iAmAlbusYourMate_bot">here</a>, or search on Telegram with name, iAmAlbusYourMate_bot</h3>
