@@ -4,46 +4,20 @@ const request = require('request')
 const mongoose = require('mongoose');
 const express = require('express')
 const bodyParser = require('body-parser');
- 
-// const express = require("express");
-
-
-// const bot = new TelegramBot(process.env.TOKEN, { polling: true });
-// console.log(process.env.NODE_ENV);
-// const app = express();
+const res = require('express/lib/response');
 
 const TOKEN = process.env.BOT_TOKEN;
 const APP_URL = process.env.HEROKU_URL;
 const DB = process.env.DATABASE;
-// const webHook = { webHook: {port: process.env.PORT, autoOpen: false}};
-// const pooling = {pooling: {autoStart: false }};
-// const options = process.env.NODE_ENV === "production" ? webHook : pooling;
-// const bot = new TelegramBot(TOKEN, options);
+
 let bot;
 if (process.env.NODE_ENV === 'production') {
     bot = new TelegramBot(TOKEN);
     bot.setWebHook(process.env.HEROKU_URL + TOKEN);
  } else {
-    bot = new TelegramBot(token, { polling: true });
+    bot = new TelegramBot(TOKEN, { polling: true });
  }
 mongoose.connect(DB);
-// .then(() => {
-//     if(process.env.NODE_ENV === 'production') {
-//         bot.deleteWebHook()
-//         .then(() => {
-
-//             // bot.setWebHook(`${APP_URL}/bot${TOKEN}`);
-//             bot.setWebHook(APP_URL + TOK);
-//         })
-//         .then(() => {
-//             bot.openWebHook();
-//         });
-//     } else {
-//         console.log("here");
-//         bot.startPolling();
-//     }
-// });
-
 
 const userSchema = new mongoose.Schema({
     username: String,
@@ -54,16 +28,7 @@ const userSchema = new mongoose.Schema({
 
 const User = mongoose.model("User", userSchema);
 
-// bot.on("polling_error", (err) => console.log(err));
-
 const markdownEnable = {parse_mode: "Markdown"};
-
-
-
-
-
-
-
 
 bot.onText(/\/start/, function(msg, match) {
     const chatId = msg.chat.id;
@@ -92,6 +57,34 @@ bot.onText(/\/help/, function(msg, match) {
     '➡️ To get details of a user on leetcode : \n' + '/leetcode {username}\n\n' +
     '➡️ To get details of a user on codeforces : \n' + '/codeforces {username}\n\n'
     );
+})
+
+bot.onText(/\/meaning (.+)/, function(msg, match) {
+    const chatId = msg.chat.id;
+    const word = match[1];
+
+    request('https://api.dictionaryapi.dev/api/v2/entries/en/' + word, 
+    function(error, response, body) {
+        if(!error && response.statusCode === 200) {
+            bot.sendMessage(chatId, 'Looking for meaning of ' + word + '...')
+            .then((msg) => {
+                res = JSON.parse(body);
+                console.log(res);
+                for(let i=0; i<res[0].meanings.length; i++) {
+                    bot.sendMessage(chatId, 
+                        '\nPart of speech : ' + res[0].meanings[i].partOfSpeech +
+                        '\n\nDefinitions : ' + res[0].meanings[i].definitions[0].definition + 
+                        '\n\nSynonyms : ' + res[0].meanings[i].synonyms[0] + 
+                        '\nAntonyms : ' + res[0].meanings[i].antonyms[0])
+                }
+            })
+            .catch(function(err) {
+                bot.sendMessage(chatId, 'Opps, ' + word + ' not found! 😞');
+            })
+        } else {
+            bot.sendMessage(chatId, 'Opps! Something went wrong 😞');
+        }
+    })
 })
 
 bot.onText(/\/movie (.+)/, function (msg, match) {
@@ -575,13 +568,6 @@ bot.onText(/\/codeforces (.+)/, function (msg, match) {
 bot.onText(/^[^/]/, function(msg, match) {
     bot.sendMessage(msg.chat.id, 'I didn\'t get it! 😵‍💫\nSee /help 🙄	');
 })
-
-// let port = process.env.PORT;
-// if (port == null || port == "") {
-//   port = 3000;
-// }
-
-// app.listen(port);
 
 
 const app = express();
