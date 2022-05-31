@@ -501,7 +501,7 @@ bot.onText(/\/leetcode (.+)/, function (msg, match) {
 
             bot.sendChatAction(chatId, 'typing')
             .then((msg) => {
-                res = JSON.parse(body)
+                const res = JSON.parse(body)
 
                 bot.sendMessage(chatId, 
                     '\nDetails of ' + username + '' + 
@@ -540,7 +540,7 @@ bot.onText(/\/codeforces (.+)/, function (msg, match) {
 
 			bot.sendChatAction(chatId, 'typing')
 				.then((msg) => {
-                    res = JSON.parse(body)
+                    const res = JSON.parse(body)
                     
                     let totalProblems = 0;
                     for(let i=0; i<res.contests.length; i++) {
