@@ -17,6 +17,7 @@ if (process.env.NODE_ENV === 'production') {
  } else {
     bot = new TelegramBot(TOKEN, { polling: true });
  }
+
 mongoose.connect(DB);
 
 const userSchema = new mongoose.Schema({
@@ -33,7 +34,7 @@ const markdownEnable = {parse_mode: "Markdown"};
 bot.onText(/\/start/, function(msg, match) {
     const chatId = msg.chat.id;
     bot.sendMessage(chatId, '* Hello! 👋 My name is Mate 🤠 I am made for you 😎*\n\n' +
-    'I can bring many informations for you such as news 📰, weather 🌤, movie detail 🎥 \nAlso I can save your favourite dates ❤️ and daily tasks 📝 in me! 😉 \n\n_Would you like to try me ?_ Type /help !', markdownEnable)
+    'I can bring many informations for you such as news 📰, weather 🌤, movie detail and rating 🎥 and word meanings ❓ as well \n\nAlso I can save your favourite dates ❤️ and daily tasks 📝 in me! 😉 \n\n_Would you like to try me ?_ Type /help !', markdownEnable)
 })
 
 bot.onText(/\/help/, function(msg, match) {
@@ -42,7 +43,8 @@ bot.onText(/\/help/, function(msg, match) {
     '♦ General Purpose --\n\n' +
     '➡️ To get news : \n/news {city/anything}\n' +
     '➡️ To get weather report : \n/weather {city}\n' +
-    '➡️ To get a movie detail : \n/movie {movie name}\n\n' + 
+    '➡️ To get a movie detail : \n/movie {movie name}\n' + 
+    '➡️ To get a word meaning : \n/meaning {meaning}\n\n' + 
     '♦ Save your favourite date and make to-do list -- \n\n' + 
     '➡️ To create id : \n/createmyid {username} {password}\n\n' +
     '➡️ To insert an event & date : \n/insert {your_username} {your_password} {event} {date}\n\n' + 
@@ -68,21 +70,25 @@ bot.onText(/\/meaning (.+)/, function(msg, match) {
         if(!error && response.statusCode === 200) {
             bot.sendMessage(chatId, 'Looking for meaning of ' + word + '...')
             .then((msg) => {
-                res = JSON.parse(body);
-                console.log(res);
-                for(let i=0; i<res[0].meanings.length; i++) {
-                    bot.sendMessage(chatId, 
-                        '\nPart of speech : ' + res[0].meanings[i].partOfSpeech +
-                        '\n\nDefinitions : ' + res[0].meanings[i].definitions[0].definition + 
-                        '\n\nSynonyms : ' + res[0].meanings[i].synonyms[0] + 
-                        '\nAntonyms : ' + res[0].meanings[i].antonyms[0])
+                const res = JSON.parse(body);
+                if(res[0]) {
+                    for(let i=0; i<res[0].meanings.length; i++) {
+                        bot.sendMessage(chatId, 
+                            '\nPart of speech : ' + res[0].meanings[i].partOfSpeech +
+                            '\n\nDefinitions : ' + res[0].meanings[i].definitions[0].definition + 
+                            '\n\nSynonyms : ' + res[0].meanings[i].synonyms[0] + 
+                            '\nAntonyms : ' + res[0].meanings[i].antonyms[0]
+                        )
+                    }
+                } else {
+                    bot.sendMessage(chatId, 'Opps, ' + word + ' not found! 😞');
                 }
             })
             .catch(function(err) {
                 bot.sendMessage(chatId, 'Opps, ' + word + ' not found! 😞');
             })
         } else {
-            bot.sendMessage(chatId, 'Opps! Something went wrong 😞');
+            bot.sendMessage(chatId, 'Opps, ' + word + ' not found! 😞');
         }
     })
 })
@@ -96,7 +102,7 @@ bot.onText(/\/movie (.+)/, function (msg, match) {
             if (!error && response.statusCode == 200) {
                 bot.sendMessage(chatId, '_Looking for ' + movie + '..._', markdownEnable)
                 .then((msg) => {
-                    res = JSON.parse(body)
+                    const res = JSON.parse(body)
 
                     bot.sendPhoto(chatId, res.Poster, {
                         caption: '\nTitle : '  + res.Title + 
@@ -133,11 +139,9 @@ bot.onText(/\/news (.+)/, function (msg, match) {
 
 		if (!error && response.statusCode == 200) {
 
-			bot.sendMessage(chatId,
-				'_Looking for details of_ ' + city
-				+ '...', { parse_mode: "Markdown" })
-				.then((msg) => {
-				res = JSON.parse(body)
+			bot.sendMessage(chatId, '_Looking for details of_ ' + city + '...', { parse_mode: "Markdown" })
+            .then((msg) => {
+                const res = JSON.parse(body)
 
                 // bot.sendMessage(chatId, '_News of ' + city + '_', markdownEnable);
                 for(let i=0; i<10; i++) {
@@ -169,7 +173,7 @@ bot.onText(/\/weather (.+)/, function (msg, match) {
 
 			bot.sendMessage(chatId, '_Looking for details of_ ' + city + '...', { parse_mode: "Markdown" })
             .then((msg) => {
-                res = JSON.parse(body)
+                const res = JSON.parse(body)
                 var temp = Math.round((parseInt(
                     res.main.temp_min) - 273.15), 2)
 
@@ -198,7 +202,7 @@ bot.onText(/\/weather (.+)/, function (msg, match) {
                 bot.sendMessage(chatId, 'Opps! City not found 😞');
             })
 		} else {
-            bot.sendMessage(chatId, 'Opps! Something went wrong 😞');
+            bot.sendMessage(chatId, 'Opps! City not found 😞');
         }
 	})
 })

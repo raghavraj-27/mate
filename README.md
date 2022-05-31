@@ -6,7 +6,7 @@
 <a href="http://t.me/iAmAlbusYourMate_bot"><h1 align="center">mate</h1></a>
 
 
-<h2 align="center"> A friendly bot which can bring news, weather for you and save your daily tasks </h2>
+<h2 align="center"> A friendly bot which can bring news, weather, word meanings for you and save your daily tasks </h2>
 
 <h3>Some of the commands with examples</h3>
 
@@ -34,7 +34,7 @@
 - /weather [city] : This command will weather report of given city"
 
 <br>
-<img src="images/botNewsCommand.jpeg" alt="drawing" height="400" width="200">
+<img src="images/botWeatherCommand.jpeg" alt="drawing" height="400" width="200">
 
 ---
 
@@ -46,7 +46,7 @@
 
 --- 
 
-<h3>Find the bot <a href="http://t.me/iAmAlbusYourMate_bot">here</a>, or search on Telegram with name, iAmAlbusYourMate_bot</h3>
+<h3 align="center">Find the bot <a href="http://t.me/iAmAlbusYourMate_bot">here</a>, or search on Telegram with name, iAmAlbusYourMate_bot</h3>
 
 <!-- <a href="https://soshace.com/building-a-telegram-bot-with-node-js/">Resource to study for it</a>
 <a href="https://stackoverflow.com/questions/18552846/no-web-processes-running-django-in-heroku">Resource to study for it</a> -->
