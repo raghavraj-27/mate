@@ -24,9 +24,9 @@ if (process.env.NODE_ENV === 'production') {
     bot = new TelegramBot(TOKEN);
     bot.setWebHook(process.env.HEROKU_URL + TOKEN);
  } else {
-    bot = new TelegramBot(token, { polling: true });
+    bot = new TelegramBot(TOKEN, { polling: true });
  }
-mongoose.connect(DB);
+// mongoose.connect(DB);
 // .then(() => {
 //     if(process.env.NODE_ENV === 'production') {
 //         bot.deleteWebHook()
@@ -45,14 +45,14 @@ mongoose.connect(DB);
 // });
 
 
-const userSchema = new mongoose.Schema({
-    username: String,
-    password: String,
-    items: [{name: String, date: String}],
-    tasks: [{event: String}]
-})
+// const userSchema = new mongoose.Schema({
+//     username: String,
+//     password: String,
+//     items: [{name: String, date: String}],
+//     tasks: [{event: String}]
+// })
 
-const User = mongoose.model("User", userSchema);
+// const User = mongoose.model("User", userSchema);
 
 // bot.on("polling_error", (err) => console.log(err));
 
@@ -210,287 +210,287 @@ bot.onText(/\/weather (.+)/, function (msg, match) {
 	})
 })
 
-bot.onText(/\/createmyid (.+)/, function(msg, match) {
-    const chadId = msg.chat.id;
-    const value = match[1].split(" ");
+// bot.onText(/\/createmyid (.+)/, function(msg, match) {
+//     const chadId = msg.chat.id;
+//     const value = match[1].split(" ");
 
-    if(value.length !== 2) {
-        bot.sendMessage(chadId, 'Seems an invalid command! 🧐 Try again...');
-    } else {
-        const user_name = value[0];
-        const user_password = value[1];
+//     if(value.length !== 2) {
+//         bot.sendMessage(chadId, 'Seems an invalid command! 🧐 Try again...');
+//     } else {
+//         const user_name = value[0];
+//         const user_password = value[1];
 
-        User.findOne({username: user_name}, function(err, foundUser) {
-            if(!err) {
-                if(foundUser) {
-                    bot.sendMessage(chadId, 'You are an existing user! 😌 \nAdd your item directly using \n/insert {your_username} {your_password} {event} {date}\n\n' + 
-                    'Add tasks in todo lisk using\n /add {your_username} {your_password} {task}\n\n' + 
-                    'Note that your event, date and task should be in camel case...');
-                } else {
-                    const newuser = new User({
-                        username: user_name,
-                        password: user_password,
-                        items: [],
-                        tasks : []
-                    });
-                    newuser.save();
-                    bot.sendMessage(chadId, 'Created! 💯 \nAdd your item directly using \n/insert {your_username} {your_password} {event} {date}\n\n' + 
-                    'Add tasks in todo lisk using\n /add {your_username} {your_password} {task}\n\n' + 
-                    'Note that your event, date and task should be in camel case...');
-                }
-            } else {
-                bot.sendMessage(chadId, 'Opps! Some error occured 😔');
-            }
-        })
-    }
-})
+//         User.findOne({username: user_name}, function(err, foundUser) {
+//             if(!err) {
+//                 if(foundUser) {
+//                     bot.sendMessage(chadId, 'You are an existing user! 😌 \nAdd your item directly using \n/insert {your_username} {your_password} {event} {date}\n\n' + 
+//                     'Add tasks in todo lisk using\n /add {your_username} {your_password} {task}\n\n' + 
+//                     'Note that your event, date and task should be in camel case...');
+//                 } else {
+//                     const newuser = new User({
+//                         username: user_name,
+//                         password: user_password,
+//                         items: [],
+//                         tasks : []
+//                     });
+//                     newuser.save();
+//                     bot.sendMessage(chadId, 'Created! 💯 \nAdd your item directly using \n/insert {your_username} {your_password} {event} {date}\n\n' + 
+//                     'Add tasks in todo lisk using\n /add {your_username} {your_password} {task}\n\n' + 
+//                     'Note that your event, date and task should be in camel case...');
+//                 }
+//             } else {
+//                 bot.sendMessage(chadId, 'Opps! Some error occured 😔');
+//             }
+//         })
+//     }
+// })
 
-bot.onText(/\/insert (.+)/, function(msg, match) {
-    const chatId = msg.chat.id;
-    const value = match[1].split(" ");
+// bot.onText(/\/insert (.+)/, function(msg, match) {
+//     const chatId = msg.chat.id;
+//     const value = match[1].split(" ");
 
-    if(value.length !== 4) {
-        bot.sendMessage(chatId, 'Seems an invalid command! 🧐 Try again..' +
-        '\n\nNote that you are not adding any spaces in Date and Event 😕')
-    } else {
-        const user_name = value[0];
-        const user_password = value[1];
-        const item = value[2];
-        const date = value[3];
-        User.find({username: user_name}, function(err, foundUser) {
-            if(!err) {
-                if(!foundUser[0]) {
-                    bot.sendMessage(chatId, 'Seems like you are not registered! 🧐\n\nTo get registered, type /createmyid {your_username} {your_password}');
-                }
-                else if(foundUser[0].password === user_password) {
-                    const newitem = {
-                        name: item,
-                        date: date
-                    };
-                    foundUser[0].items.push(newitem);
-                    foundUser[0].save();
-                    bot.sendMessage(chatId, 'Item saved! 💯 \n\nTo view your list, type /view {your_username} {your_password}');
-                } else {
-                    bot.sendMessage(chatId, 'Incorrect password! 😵‍💫\n\nTry again with the same command');
-                }
-            } else {
-                bot.sendMessage(chatId, 'Opps! Some error occured 😔');
-            }
-        })
-    }
-})
+//     if(value.length !== 4) {
+//         bot.sendMessage(chatId, 'Seems an invalid command! 🧐 Try again..' +
+//         '\n\nNote that you are not adding any spaces in Date and Event 😕')
+//     } else {
+//         const user_name = value[0];
+//         const user_password = value[1];
+//         const item = value[2];
+//         const date = value[3];
+//         User.find({username: user_name}, function(err, foundUser) {
+//             if(!err) {
+//                 if(!foundUser[0]) {
+//                     bot.sendMessage(chatId, 'Seems like you are not registered! 🧐\n\nTo get registered, type /createmyid {your_username} {your_password}');
+//                 }
+//                 else if(foundUser[0].password === user_password) {
+//                     const newitem = {
+//                         name: item,
+//                         date: date
+//                     };
+//                     foundUser[0].items.push(newitem);
+//                     foundUser[0].save();
+//                     bot.sendMessage(chatId, 'Item saved! 💯 \n\nTo view your list, type /view {your_username} {your_password}');
+//                 } else {
+//                     bot.sendMessage(chatId, 'Incorrect password! 😵‍💫\n\nTry again with the same command');
+//                 }
+//             } else {
+//                 bot.sendMessage(chatId, 'Opps! Some error occured 😔');
+//             }
+//         })
+//     }
+// })
 
-bot.onText(/\/remove (.+)/, function(msg, match) {
-    const chatId = msg.chat.id;
-    const value = match[1].split(" ");
+// bot.onText(/\/remove (.+)/, function(msg, match) {
+//     const chatId = msg.chat.id;
+//     const value = match[1].split(" ");
 
-    if(value.length != 3) {
-        bot.sendMessage(chatId, 'Seems an invalid command! 🧐 Try again..' +
-        '\n\nNote that you are not adding any spaces in Date and Event 😕')
-    } else {
-        const user_username = value[0];
-        const user_password = value[1];
-        const user_item = value[2];
+//     if(value.length != 3) {
+//         bot.sendMessage(chatId, 'Seems an invalid command! 🧐 Try again..' +
+//         '\n\nNote that you are not adding any spaces in Date and Event 😕')
+//     } else {
+//         const user_username = value[0];
+//         const user_password = value[1];
+//         const user_item = value[2];
 
-        User.findOneAndUpdate({username: user_username, $and:[ { password: user_password }]}, {$pull: {items: {name: user_item}}} ,function(err, foundUser) {
-            if(err) {
-                bot.sendMessage(chatId, 'Opps! Some error occured! 😔');
-            } else {
-                // console.log(foundUser);
-                bot.sendMessage(chatId, 'Done! 💯 \nType /view {your_username} {your_password}\n\nTo see your fav dates!  ❤ ');
-            }
-        })
-    }
-})
+//         User.findOneAndUpdate({username: user_username, $and:[ { password: user_password }]}, {$pull: {items: {name: user_item}}} ,function(err, foundUser) {
+//             if(err) {
+//                 bot.sendMessage(chatId, 'Opps! Some error occured! 😔');
+//             } else {
+//                 // console.log(foundUser);
+//                 bot.sendMessage(chatId, 'Done! 💯 \nType /view {your_username} {your_password}\n\nTo see your fav dates!  ❤ ');
+//             }
+//         })
+//     }
+// })
 
 
-bot.onText(/\/view (.+)/, function(msg, match) {
-    const chatId = msg.chat.id;
-    const value = match[1].split(" ");
+// bot.onText(/\/view (.+)/, function(msg, match) {
+//     const chatId = msg.chat.id;
+//     const value = match[1].split(" ");
     
-    if(value.length !== 2) {
-        bot.sendMessage(chatId, 'Seems an invalid command 😵‍💫 Try again..')
-    }
-    else {
-        const user_name = value[0];
-        const password = value[1];
-        User.find({username: user_name}, function(err, foundUser) {
-            if(!err) {
-                if(foundUser[0]) {
-                    if(foundUser[0].password === password) {
-                        let message = "";
-                        for(let i=0; i<foundUser[0].items.length; i++) {
-                            message = message + '\n' + foundUser[0].items[i].name + " - " + foundUser[0].items[i].date;
-                        }
+//     if(value.length !== 2) {
+//         bot.sendMessage(chatId, 'Seems an invalid command 😵‍💫 Try again..')
+//     }
+//     else {
+//         const user_name = value[0];
+//         const password = value[1];
+//         User.find({username: user_name}, function(err, foundUser) {
+//             if(!err) {
+//                 if(foundUser[0]) {
+//                     if(foundUser[0].password === password) {
+//                         let message = "";
+//                         for(let i=0; i<foundUser[0].items.length; i++) {
+//                             message = message + '\n' + foundUser[0].items[i].name + " - " + foundUser[0].items[i].date;
+//                         }
 
-                        bot.sendMessage(chatId, 'Hi ' + user_name + '👋 Your fav ❤ dates - \n' + message + 
-                        '\n\nTo remove a particular fav date, \nType /remove {your_username} {your_password} {your_event}');
-                    } else {
-                        bot.sendMessage(chatId, 'Incorrect password! 😕 \n\nTry again with the same command');
-                    }
-                } else {
-                    bot.sendMessage(chatId, 'Seems like you are not registered! 🧐 \n\nTo get registered, type /createmyid {your_username} {your_password}');
-                }
-            } else {
-                bot.sendMessage(chatId, 'Opps! Some error occured 😔');
-            }
-        })
-    }
-})
+//                         bot.sendMessage(chatId, 'Hi ' + user_name + '👋 Your fav ❤ dates - \n' + message + 
+//                         '\n\nTo remove a particular fav date, \nType /remove {your_username} {your_password} {your_event}');
+//                     } else {
+//                         bot.sendMessage(chatId, 'Incorrect password! 😕 \n\nTry again with the same command');
+//                     }
+//                 } else {
+//                     bot.sendMessage(chatId, 'Seems like you are not registered! 🧐 \n\nTo get registered, type /createmyid {your_username} {your_password}');
+//                 }
+//             } else {
+//                 bot.sendMessage(chatId, 'Opps! Some error occured 😔');
+//             }
+//         })
+//     }
+// })
 
-bot.onText(/\/dropmyfavdate (.+)/, function(msg, match) {
-    const chatId = msg.chat.id;
-    const value = match[1].split(" ");
+// bot.onText(/\/dropmyfavdate (.+)/, function(msg, match) {
+//     const chatId = msg.chat.id;
+//     const value = match[1].split(" ");
 
-    if(value.length !== 2) {
-        bot.sendMessage(chatId, 'Invalid command! 😵‍💫	\nType /dropmyfavdate {your_username} {your_password}}\n\n _Make sure there is not any white space in any of the two items!_' ,markdownEnable);
-    } else {
-        const user_username = value[0];
-        const user_password = value[1];
+//     if(value.length !== 2) {
+//         bot.sendMessage(chatId, 'Invalid command! 😵‍💫	\nType /dropmyfavdate {your_username} {your_password}}\n\n _Make sure there is not any white space in any of the two items!_' ,markdownEnable);
+//     } else {
+//         const user_username = value[0];
+//         const user_password = value[1];
 
-        User.find({username: user_username}, function(err, foundUser) {
-            if(err) {
-                bot.sendMessage(chatId, 'Opps! Some error occured! 😔');
-            } else {
-                if(foundUser[0]) {
-                    if(foundUser[0].password === user_password) {
-                        foundUser[0].items = [];
-                        foundUser[0].save();
-                        bot.sendMessage(chatId, 'Sucessfully droped! 💯	');
-                    } else {
-                        bot.sendMessage(chatId, 'Password is incorrect! 😕 \nTry again with the same command...');
-                    }
-                } else {
-                    bot.sendMessage(chatId, 'Username not found! 😕\nSeems like you are not registered 🧐' + 
-                    '\n\nType /createmyid {username} {password}\nTo get registered');
-                }
-            }
-        })
-    }
-})
+//         User.find({username: user_username}, function(err, foundUser) {
+//             if(err) {
+//                 bot.sendMessage(chatId, 'Opps! Some error occured! 😔');
+//             } else {
+//                 if(foundUser[0]) {
+//                     if(foundUser[0].password === user_password) {
+//                         foundUser[0].items = [];
+//                         foundUser[0].save();
+//                         bot.sendMessage(chatId, 'Sucessfully droped! 💯	');
+//                     } else {
+//                         bot.sendMessage(chatId, 'Password is incorrect! 😕 \nTry again with the same command...');
+//                     }
+//                 } else {
+//                     bot.sendMessage(chatId, 'Username not found! 😕\nSeems like you are not registered 🧐' + 
+//                     '\n\nType /createmyid {username} {password}\nTo get registered');
+//                 }
+//             }
+//         })
+//     }
+// })
 
-bot.onText(/\/add (.+)/, function(msg, match) {
-    const chatId = msg.chat.id;
-    const value = match[1].split(" ");
+// bot.onText(/\/add (.+)/, function(msg, match) {
+//     const chatId = msg.chat.id;
+//     const value = match[1].split(" ");
 
-    if(value.length != 3) {
-        bot.sendMessage(chatId, 'Invalid command! Type {your_username} {your_password} {event to add}\n\nMake sure there is not any white space in any of the three items!');
-    } else {
-        const user_username = value[0];
-        const user_password = value[1];
-        const user_event = value[2];
+//     if(value.length != 3) {
+//         bot.sendMessage(chatId, 'Invalid command! Type {your_username} {your_password} {event to add}\n\nMake sure there is not any white space in any of the three items!');
+//     } else {
+//         const user_username = value[0];
+//         const user_password = value[1];
+//         const user_event = value[2];
 
-        User.find({username: user_username}, function(err, foundUser) {
-            if(err) {
-                bot.sendMessage(chatId, 'Opps! Some error occured!');
-            } else {
-                if(foundUser[0]) {
-                    if(foundUser[0].password === user_password) {
-                        foundUser[0].tasks.push({event: user_event});
-                        foundUser[0].save(function(err) {
-                            if(!err) {
-                                bot.sendMessage(chatId, 'Recorded! 💯 \n\nTo view your todos, \ntype /todo {your_username} {your_password}\n\nTo delete the done item\ntype /done {your_username} {your_password} {your_task}\n\nMake sure there is not any white space in any of the three items!');
-                            } else {
-                                bot.sendMessage(chatId, 'Opps! Some error occured! 😔');
-                            }
-                        });
-                    } else {
-                        bot.sendMessage(chatId, 'Password is incorrect! \nTry again with the same command...');
-                    }
-                } else {
-                    bot.sendMessage(chatId, 'Username not found! 😕 \nSeems like you are not registered 🧐' + 
-                    '\n\nType /createmyid {username} {password}\nTo get registered');
-                }
-            }
-        })
-    }
-})
+//         User.find({username: user_username}, function(err, foundUser) {
+//             if(err) {
+//                 bot.sendMessage(chatId, 'Opps! Some error occured!');
+//             } else {
+//                 if(foundUser[0]) {
+//                     if(foundUser[0].password === user_password) {
+//                         foundUser[0].tasks.push({event: user_event});
+//                         foundUser[0].save(function(err) {
+//                             if(!err) {
+//                                 bot.sendMessage(chatId, 'Recorded! 💯 \n\nTo view your todos, \ntype /todo {your_username} {your_password}\n\nTo delete the done item\ntype /done {your_username} {your_password} {your_task}\n\nMake sure there is not any white space in any of the three items!');
+//                             } else {
+//                                 bot.sendMessage(chatId, 'Opps! Some error occured! 😔');
+//                             }
+//                         });
+//                     } else {
+//                         bot.sendMessage(chatId, 'Password is incorrect! \nTry again with the same command...');
+//                     }
+//                 } else {
+//                     bot.sendMessage(chatId, 'Username not found! 😕 \nSeems like you are not registered 🧐' + 
+//                     '\n\nType /createmyid {username} {password}\nTo get registered');
+//                 }
+//             }
+//         })
+//     }
+// })
 
-bot.onText(/\/done (.+)/, function(msg, match) {
-    const chatId = msg.chat.id;
-    const value = match[1].split(" ");
+// bot.onText(/\/done (.+)/, function(msg, match) {
+//     const chatId = msg.chat.id;
+//     const value = match[1].split(" ");
 
-    if(value.length != 3) {
-        bot.sendMessage(chatId, 'Invalid command! 😵‍💫 \nType {your_username} {your_password} {event to add}\n\n_Make sure there is not any white space in any of the three items!_', markdownEnable);
-    } else {
-        const user_username = value[0];
-        const user_password = value[1];
-        const user_event = value[2];
+//     if(value.length != 3) {
+//         bot.sendMessage(chatId, 'Invalid command! 😵‍💫 \nType {your_username} {your_password} {event to add}\n\n_Make sure there is not any white space in any of the three items!_', markdownEnable);
+//     } else {
+//         const user_username = value[0];
+//         const user_password = value[1];
+//         const user_event = value[2];
 
-        User.findOneAndUpdate({username: user_username, $and:[ { password: user_password }]}, {$pull: {tasks: {event: user_event}}} ,function(err, foundUser) {
-            if(err) {
-                bot.sendMessage(chatId, 'Opps! Some error occured! 😔');
-            } else {
-                bot.sendMessage(chatId, 'Done! 💯 \nType /todo {your_username} {your_password}\n\nTo see your rest tasks!');
-            }
-        })
-    }
-})
+//         User.findOneAndUpdate({username: user_username, $and:[ { password: user_password }]}, {$pull: {tasks: {event: user_event}}} ,function(err, foundUser) {
+//             if(err) {
+//                 bot.sendMessage(chatId, 'Opps! Some error occured! 😔');
+//             } else {
+//                 bot.sendMessage(chatId, 'Done! 💯 \nType /todo {your_username} {your_password}\n\nTo see your rest tasks!');
+//             }
+//         })
+//     }
+// })
 
-bot.onText(/\/todo (.+)/, function(msg, match) {
-    const chatId = msg.chat.id;
-    const value = match[1].split(" ");
+// bot.onText(/\/todo (.+)/, function(msg, match) {
+//     const chatId = msg.chat.id;
+//     const value = match[1].split(" ");
 
-    if(value.length != 2) {
-        bot.sendMessage(chatId, 'Invalid command! 😵‍💫	\nType /todo {your_username} {your_password}\n\n _Make sure there is not any white space in any of the two items!_' ,markdownEnable);
-    } else {
-        const user_username = value[0];
-        const user_password = value[1];
+//     if(value.length != 2) {
+//         bot.sendMessage(chatId, 'Invalid command! 😵‍💫	\nType /todo {your_username} {your_password}\n\n _Make sure there is not any white space in any of the two items!_' ,markdownEnable);
+//     } else {
+//         const user_username = value[0];
+//         const user_password = value[1];
 
-        User.find({username: user_username}, function(err, foundUser) {
-            if(err) {
-                bot.sendMessage(chatId, 'Opps! Some error occured! 😔');
-            } else {
-                if(foundUser[0]) {
-                    if(foundUser[0].password === user_password) {
-                        let message = '*Hi ' + user_username + '👋 Your todos 📝* -\n';
-                        for(let i=0; i<foundUser[0].tasks.length; i++) {
-                            message = message + '\n' + (i+1) + '. ' + foundUser[0].tasks[i].event;
-                        }
-                        bot.sendMessage(chatId, message + '\n\n➡️ _If any item which you had deleted is still here, make sure you had typed the username and password correctly!_', markdownEnable);
-                    } else {
-                        bot.sendMessage(chatId, 'Password is incorrect! 😕 \nTry again with the same command...');
-                    }
-                } else {
-                    bot.sendMessage(chatId, 'Username not found! 😕\nSeems like you are not registered 🧐' + 
-                    '\n\nType /createmyid {username} {password}\nTo get registered');
-                }
-            }
-        })
-    }
-})
+//         User.find({username: user_username}, function(err, foundUser) {
+//             if(err) {
+//                 bot.sendMessage(chatId, 'Opps! Some error occured! 😔');
+//             } else {
+//                 if(foundUser[0]) {
+//                     if(foundUser[0].password === user_password) {
+//                         let message = '*Hi ' + user_username + '👋 Your todos 📝* -\n';
+//                         for(let i=0; i<foundUser[0].tasks.length; i++) {
+//                             message = message + '\n' + (i+1) + '. ' + foundUser[0].tasks[i].event;
+//                         }
+//                         bot.sendMessage(chatId, message + '\n\n➡️ _If any item which you had deleted is still here, make sure you had typed the username and password correctly!_', markdownEnable);
+//                     } else {
+//                         bot.sendMessage(chatId, 'Password is incorrect! 😕 \nTry again with the same command...');
+//                     }
+//                 } else {
+//                     bot.sendMessage(chatId, 'Username not found! 😕\nSeems like you are not registered 🧐' + 
+//                     '\n\nType /createmyid {username} {password}\nTo get registered');
+//                 }
+//             }
+//         })
+//     }
+// })
 
 
-bot.onText(/\/dropmytodo (.+)/, function(msg, match) {
-    const chatId = msg.chat.id;
-    const value = match[1].split(" ");
+// bot.onText(/\/dropmytodo (.+)/, function(msg, match) {
+//     const chatId = msg.chat.id;
+//     const value = match[1].split(" ");
 
-    if(value.length !== 2) {
-        bot.sendMessage(chatId, 'Invalid command! 😵‍💫	\nType /dropmylist {your_username} {your_password}}\n\n _Make sure there is not any white space in any of the two items!_' ,markdownEnable);
-    } else {
-        const user_username = value[0];
-        const user_password = value[1];
+//     if(value.length !== 2) {
+//         bot.sendMessage(chatId, 'Invalid command! 😵‍💫	\nType /dropmylist {your_username} {your_password}}\n\n _Make sure there is not any white space in any of the two items!_' ,markdownEnable);
+//     } else {
+//         const user_username = value[0];
+//         const user_password = value[1];
 
-        User.find({username: user_username}, function(err, foundUser) {
-            if(err) {
-                bot.sendMessage(chatId, 'Opps! Some error occured! 😔');
-            } else {
-                if(foundUser[0]) {
-                    if(foundUser[0].password === user_password) {
-                        foundUser[0].tasks = [];
-                        foundUser[0].save();
-                        bot.sendMessage(chatId, 'Sucessfully droped! 💯	');
-                    } else {
-                        bot.sendMessage(chatId, 'Password is incorrect! 😕 \nTry again with the same command...');
-                    }
-                } else {
-                    bot.sendMessage(chatId, 'Username not found! 😕\nSeems like you are not registered 🧐' + 
-                    '\n\nType /createmyid {username} {password}\nTo get registered');
-                }
-            }
-        })
-    }
-})
+//         User.find({username: user_username}, function(err, foundUser) {
+//             if(err) {
+//                 bot.sendMessage(chatId, 'Opps! Some error occured! 😔');
+//             } else {
+//                 if(foundUser[0]) {
+//                     if(foundUser[0].password === user_password) {
+//                         foundUser[0].tasks = [];
+//                         foundUser[0].save();
+//                         bot.sendMessage(chatId, 'Sucessfully droped! 💯	');
+//                     } else {
+//                         bot.sendMessage(chatId, 'Password is incorrect! 😕 \nTry again with the same command...');
+//                     }
+//                 } else {
+//                     bot.sendMessage(chatId, 'Username not found! 😕\nSeems like you are not registered 🧐' + 
+//                     '\n\nType /createmyid {username} {password}\nTo get registered');
+//                 }
+//             }
+//         })
+//     }
+// })
 
 bot.onText(/\/leetcode (.+)/, function (msg, match) {
 
